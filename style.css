@@ -100,6 +100,43 @@
   
 }
 
+@media only screen and (max-width: 768px) {
+    .bundle-content img{
+      width: 90%;
+      margin-left: 10px;
+    }
+
+    .bundle-details {
+      font-size: 10px;
+      padding: 0px 10px;
+    }
+
+}
+
+@media only screen and (max-width: 425px) {
+
+
+  .bundle-cta button{
+    font-size: 16px;
+  }
+
+}
+
+@media only screen and (max-width: 376px) {
+
+
+  .bundle-container{
+    display: flex;
+    flex-direction: column;
+    
+  }
+
+  .bundle-content{
+    padding-bottom: 20px;
+  }
+
+}
+
 .cart-value{
   font-weight: 700;
 }
