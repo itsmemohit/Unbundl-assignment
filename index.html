@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+  <link rel="stylesheet" href="style.css">
+  <title>Frontend Mentor | QR code component</title>
+
+
+</head>
+
+<body>
+  <h1 class="title">Product Carousel</h1>
+  <div class="slider">
+
+    <div>
+      <div class="slideCopy-container">
+        <div class="slideCopy-content"><img src="images/recharge-in-comfort.jpg"></div>
+      </div>
+    </div>
+    <div>
+      <div class="slideCopy-container">
+        <div class="slideCopy-content"><img src="images/experience-true-balance.png"></div>
+      </div>
+    </div>
+    <div>
+      <div class="slideCopy-container">
+        <div class="slideCopy-content"><img src="images/recharge-in-comfort.jpg"></div>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="title">Product Bundle</h1>
+  <div class="bundle-container">
+    <div class="bundle-content">
+      <img src="images/lemonade.png" alt="lemonade">
+      <div class="bundle-details">
+        <h3>Classic Lemonade</h3>
+
+        <div class="bundle-cta">
+          <button>-</button>
+          <p>Rs. 60.00</p>
+          <button>+</button>
+        </div>
+
+      </div>
+    </div>
+    <div class="bundle-content">
+      <img src="images/ginger-ale.png" alt="lemonade">
+      <div class="bundle-details">
+        <h3>Ginger ale</h3>
+        <div class="bundle-cta">
+          <button>-</button>
+          <p>Rs. 60.00</p>
+          <button>+</button>
+        </div>
+      </div>
+    </div>
+    <div class="bundle-content">
+      <img src="images/tonic-water.png" alt="lemonade">
+      <div class="bundle-details">
+        <h3>Tonic water</h3>
+        <div class="bundle-cta">
+          <button>-</button>
+          <p>Rs. 60.00</p>
+          <button>+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="cart">
+    <h2 class="title">Cart Value</h2>
+    <p class="cart-value">Cart value: Rs. <span id="cart-value">0.00</span></p>
+    <p class="selected-drinks">Selected drinks: <span id="selected-drinks"></span></p>
+  </div>
+
+</body>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="slick/slick.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $('.slider').slick({
+      dots: true,
+      autoplay: true,
+      autoplaySpeed: 2000,
+      adaptiveHeight: true,
+      responsive: [
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            dots: true,
+            autoplay: true,
+            autoplaySpeed: 2000,
+            infinite: true,
+            dots: true,
+            variableWidth: true
+
+          }
+        },
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 2
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+      ]
+    });
+  });
+</script>
+<script>
+  let selectedDrinks = [];
+
+  // Define a function to update the cart value and display the selected drinks
+  function updateCart() {
+    // Get the total price of the selected drinks
+    let totalPrice = selectedDrinks.reduce((acc, drink) => acc + drink.price * drink.quantity, 0);
+
+    // Update the cart value on the HTML document
+    document.getElementById('cart-value').innerHTML = totalPrice.toFixed(2);
+
+    // Display the selected drinks on the HTML document
+    let selectedDrinksList = selectedDrinks.map(drink => drink.name + ' : ' + drink.quantity + '');
+    document.getElementById('selected-drinks').innerHTML = selectedDrinksList.join(', ');
+  }
+
+  let totalDrinks = 0;
+
+  function addDrink(drink) {
+    // Check if the selected drinks exceed the limit of 8
+    if (selectedDrinks.length >= 8 || totalDrinks >= 8) {
+      alert('You have already selected the maximum number of drinks.');
+      return;
+    }
+
+    // Check if the drink already exists in the selected drinks array
+    let existingDrink = selectedDrinks.find(d => d.name === drink.name);
+    if (existingDrink) {
+      // If the drink already exists, increment its quantity
+      existingDrink.quantity++;
+    } else {
+      // If the drink does not exist, add it to the selected drinks array with quantity 1
+      selectedDrinks.push({
+        name: drink.name,
+        price: drink.price,
+        quantity: 1
+      });
+    }
+
+    // Update the cart and display the selected drinks
+    totalDrinks++;
+    updateCart();
+  }
+
+
+
+
+
+  // Define a function to remove a drink from the selected drinks array
+  function removeDrink(drink) {
+    // Find the index of the drink in the selected drinks array
+    let index = selectedDrinks.findIndex(d => d.name === drink.name);
+
+    // If the drink exists in the selected drinks array, decrement its quantity
+    if (index !== -1) {
+      let selectedDrink = selectedDrinks[index];
+      selectedDrink.quantity--;
+
+      // If the quantity becomes 0, remove the drink from the selected drinks array
+      if (selectedDrink.quantity === 0) {
+        selectedDrinks.splice(index, 1);
+      }
+    }
+    totalDrinks--;
+
+    // Update the cart and display the selected drinks
+    updateCart();
+  }
+
+  // Add event listeners to the "+" and "-" buttons
+  let buttons = document.querySelectorAll('.bundle-cta button');
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      let bundle = button.parentElement.parentElement;
+      let drinkName = bundle.querySelector('.bundle-details h3').innerHTML;
+      let drinkPrice = parseFloat(bundle.querySelector('.bundle-details p').innerHTML.replace('Rs. ', ''));
+      let drink = { name: drinkName, price: drinkPrice };
+
+      if (button.innerHTML === '+') {
+        addDrink(drink);
+      } else {
+        removeDrink(drink);
+      }
+    });
+  });
+</script>
+
+
+</html>
